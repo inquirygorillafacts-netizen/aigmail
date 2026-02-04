@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Mic, Package, Phone, Home, MessageSquare, CreditCard, User, LayoutDashboard, Users, Briefcase, Settings } from 'lucide-react';
+import { Mic, Package, Phone, Home, MessageSquare, CreditCard, User, LayoutDashboard, Users, Briefcase, Settings, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -25,7 +25,7 @@ const ownerNavItems = [
   { path: '/owner/dashboard', icon: LayoutDashboard, label: 'Dashboard', labelHi: 'डैशबोर्ड' },
   { path: '/owner/customers', icon: Users, label: 'Customers', labelHi: 'कस्टमर' },
   { path: '/owner/chat', icon: MessageSquare, label: 'Chat', labelHi: 'चैट' },
-  { path: '/owner/business', icon: Briefcase, label: 'Business', labelHi: 'बिज़नेस' },
+  { path: '/owner/notifications', icon: Bell, label: 'Notify', labelHi: 'नोटिफाई' },
   { path: '/owner/control', icon: Settings, label: 'Control', labelHi: 'कंट्रोल' }
 ];
 
