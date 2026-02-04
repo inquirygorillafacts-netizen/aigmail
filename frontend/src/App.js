@@ -187,18 +187,20 @@ function App() {
     <ThemeProvider>
       <PWAProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <AppRoutes />
-            <InstallBanner />
-            <Toaster
-              position="top-center"
-              richColors
-              closeButton
-              toastOptions={{
-                duration: 3000,
-              }}
-            />
-          </BrowserRouter>
+          <FCMProvider>
+            <BrowserRouter>
+              <AppRoutes />
+              <InstallBanner />
+              <Toaster
+                position="top-center"
+                richColors
+                closeButton
+                toastOptions={{
+                  duration: 3000,
+                }}
+              />
+            </BrowserRouter>
+          </FCMProvider>
         </AuthProvider>
       </PWAProvider>
     </ThemeProvider>
