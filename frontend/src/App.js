@@ -170,6 +170,9 @@ const AppRoutes = () => {
       <Route path="/owner/control" element={
         <ProtectedRoute requireOwner><OwnerControlPage /></ProtectedRoute>
       } />
+      <Route path="/owner/notifications" element={
+        <ProtectedRoute requireOwner><OwnerNotificationsPage /></ProtectedRoute>
+      } />
 
       {/* Catch all - redirect based on auth */}
       <Route path="*" element={
