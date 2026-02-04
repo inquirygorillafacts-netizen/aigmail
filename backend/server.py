@@ -303,6 +303,15 @@ async def clear_all_notifications(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.delete("/notifications/{user_id}/{notification_id}")
+async def delete_single_notification(user_id: str, notification_id: str):
+    """Delete a single notification"""
+    try:
+        await db.notifications.delete_one({"user_id": user_id, "id": notification_id})
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
