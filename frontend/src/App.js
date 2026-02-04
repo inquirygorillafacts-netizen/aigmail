@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { PWAProvider } from "@/contexts/PWAContext";
+import { FCMProvider } from "@/contexts/FCMContext";
 
 // PWA Components
 import { InstallBanner } from "@/components/pwa/InstallPrompt";
@@ -34,6 +35,7 @@ import OwnerCustomersPage from "@/pages/owner/CustomersPage";
 import OwnerChatPage from "@/pages/owner/ChatPage";
 import OwnerBusinessPage from "@/pages/owner/BusinessPage";
 import OwnerControlPage from "@/pages/owner/ControlPage";
+import OwnerNotificationsPage from "@/pages/owner/NotificationsPage";
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requireOwner = false }) => {
