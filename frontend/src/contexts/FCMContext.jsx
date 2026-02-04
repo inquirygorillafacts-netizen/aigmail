@@ -125,11 +125,18 @@ export const FCMProvider = ({ children }) => {
       console.log('Foreground message:', payload);
       
       const { title, body } = payload.notification || payload.data || {};
+      const data = payload.data || {};
       
-      // Show toast notification
+      // Show toast notification with click action
       toast.info(title, {
         description: body,
-        duration: 5000
+        duration: 5000,
+        action: data.click_action ? {
+          label: 'Open Chat',
+          onClick: () => {
+            window.location.href = data.click_action;
+          }
+        } : undefined
       });
 
       // Add to notifications list
@@ -148,6 +155,24 @@ export const FCMProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, [isSupported_, permissionStatus]);
+  
+  // Listen for notification clicks from service worker
+  useEffect(() => {
+    const handleServiceWorkerMessage = (event) => {
+      if (event.data?.type === 'NOTIFICATION_CLICK') {
+        const { url } = event.data;
+        if (url) {
+          window.location.href = url;
+        }
+      }
+    };
+    
+    navigator.serviceWorker?.addEventListener('message', handleServiceWorkerMessage);
+    
+    return () => {
+      navigator.serviceWorker?.removeEventListener('message', handleServiceWorkerMessage);
+    };
+  }, []);
 
   // Auto-request permission when user logs in
   useEffect(() => {
