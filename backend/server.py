@@ -183,7 +183,7 @@ async def send_fcm_notification(data: FCMNotification):
                             badge="/icons/icon-72x72.png"
                         ),
                         fcm_options=messaging.WebpushFCMOptions(
-                            link="/"
+                            link="https://fcm-enhancement.preview.emergentagent.com/"
                         )
                     )
                 )
