@@ -158,6 +158,16 @@ export const sendMessage = async (chatId, message) => {
     ...message,
     timestamp: rtdbServerTimestamp()
   });
+  
+  // Update chat metadata for both users
+  const chatMetaRef = dbRef(rtdb, `chats/${chatId}/metadata`);
+  await set(chatMetaRef, {
+    lastMessage: message.text?.substring(0, 50) || 'File shared',
+    lastMessageTime: rtdbServerTimestamp(),
+    lastSenderId: message.senderId,
+    lastSenderName: message.senderName
+  });
+  
   return newMessageRef.key;
 };
 
@@ -171,8 +181,67 @@ export const subscribeToMessages = (chatId, callback) => {
         ...childSnapshot.val()
       });
     });
+    // Sort by timestamp
+    messages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
     callback(messages);
   });
+};
+
+// Get all customers from Firestore
+export const getAllCustomers = async () => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('roles', 'array-contains', 'customer'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+};
+
+// Subscribe to all chats for owner
+export const subscribeToAllChats = (callback) => {
+  const chatsRef = dbRef(rtdb, 'chats');
+  return onValue(chatsRef, (snapshot) => {
+    const chats = [];
+    snapshot.forEach((childSnapshot) => {
+      const chatId = childSnapshot.key;
+      const chatData = childSnapshot.val();
+      if (chatData?.metadata) {
+        chats.push({
+          chatId,
+          ...chatData.metadata,
+          messageCount: chatData.messages ? Object.keys(chatData.messages).length : 0
+        });
+      }
+    });
+    callback(chats);
+  });
+};
+
+// Set user online/offline status
+export const setUserPresence = async (userId, isOnline) => {
+  const presenceRef = dbRef(rtdb, `presence/${userId}`);
+  await set(presenceRef, {
+    online: isOnline,
+    lastSeen: rtdbServerTimestamp()
+  });
+};
+
+// Subscribe to user presence
+export const subscribeToPresence = (userId, callback) => {
+  const presenceRef = dbRef(rtdb, `presence/${userId}`);
+  return onValue(presenceRef, (snapshot) => {
+    callback(snapshot.val());
+  });
+};
+
+// Get owner user data
+export const getOwnerData = async () => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('roles', 'array-contains', 'owner'), limit(1));
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    const doc = snapshot.docs[0];
+    return { uid: doc.id, ...doc.data() };
+  }
+  return null;
 };
 
 // File Upload
